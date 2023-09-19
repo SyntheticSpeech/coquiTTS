@@ -7,6 +7,6 @@ tts = TTS(model_name="tts_models/multilingual/multi-dataset/your_tts", progress_
 tts.tts_to_file(
     "Ladies and Gentleman, today is an important day. I am going to be a graduate student. Yesterday, I was an undergraduate. Four years ago, I was a high school student.",
     language="en",
-    speaker_wav="moon_speech.wav",
+    speaker_wav="haoren.wav",
     file_path="output.wav"
 )
