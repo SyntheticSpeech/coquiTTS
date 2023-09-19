@@ -1,3 +1,5 @@
+*.m4a
+*.wav
 WadaSNR/
 .idea/
 *.pyc
