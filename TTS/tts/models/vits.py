@@ -267,6 +267,7 @@ class VitsDataset(TTSDataset):
         if self.model_args.encoder_sample_rate is not None:
             if wav.size(1) % self.model_args.encoder_sample_rate != 0:
                 wav = wav[:, : -int(wav.size(1) % self.model_args.encoder_sample_rate)]
+                print(f"encoder sample rate {self.model_args.encoder_sample_rate}, wav shape {wav.shape}")
 
         wav_filename = os.path.basename(item["audio_file"])
 
@@ -332,7 +333,7 @@ class VitsDataset(TTSDataset):
         wav_rel_lens = wav_lens / wav_lens_max
 
         token_padded = torch.LongTensor(B, max_text_len)
-        wav_padded = torch.FloatTensor(B, 1, wav_lens_max)
+        wav_padded = torch.FloatTensor(B, 2, wav_lens_max)
         token_padded = token_padded.zero_() + self.pad_id
         wav_padded = wav_padded.zero_() + self.pad_id
         for i in range(len(ids_sorted_decreasing)):
@@ -1238,7 +1239,7 @@ class Vits(BaseTTS):
         Returns:
             Tuple[Dict, Dict]: Model ouputs and computed losses.
         """
-
+        print(batch.keys())
         spec_lens = batch["spec_lens"]
 
         if optimizer_idx == 0:
