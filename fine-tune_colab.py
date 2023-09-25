@@ -135,10 +135,10 @@ if __name__ == '__main__':
         eval_split_max_size=256,
         print_step=50,
         plot_step=100,
-        log_model_step=500,
+        log_model_step=1000,
         save_all_best=True,
-        save_step=1000,
-        save_n_checkpoints=5,
+        save_step=5000,
+        save_n_checkpoints=2,
         save_checkpoints=True,
         target_loss="loss_1",
         print_eval=False,
@@ -163,7 +163,7 @@ if __name__ == '__main__':
         weighted_sampler_multipliers={},
         # It defines the Speaker Consistency Loss (SCL) α to 9 like the paper
         speaker_encoder_loss_alpha=9.0,
-        epochs=10,
+        epochs=160,
     )
 
     # Load all the datasets samples and split traning and evaluation sets

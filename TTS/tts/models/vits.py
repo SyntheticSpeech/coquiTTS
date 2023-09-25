@@ -1552,7 +1552,7 @@ class Vits(BaseTTS):
         # zero the padding frames
         batch["spec"] = batch["spec"] * sequence_mask(batch["spec_lens"]).unsqueeze(1)
         batch["mel"] = batch["mel"] * sequence_mask(batch["mel_lens"]).unsqueeze(1)
-        print(f"[VITS format_batch_on_device] {batch.keys()}")
+        # print(f"[VITS format_batch_on_device] {batch.keys()}")
         return batch
 
     def get_sampler(self, config: Coqpit, dataset: TTSDataset, num_gpus=1, is_eval=False):
