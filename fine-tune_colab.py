@@ -27,7 +27,7 @@ def m4a_to_wav():
             input_file = os.path.join(source_folder, filename)
             output_file = os.path.join(dest_folder, os.path.splitext(filename)[0] + '.wav')
             # Use subprocess to run FFmpeg to convert the file
-            cmd = ['ffmpeg', '-i', input_file, '-acodec', 'pcm_s16le', '-ar', '24000', output_file]
+            cmd = ['ffmpeg', '-i', input_file, '-acodec', 'pcm_s16le', '-ar', '16000', '-ac', '1', output_file]
             try:
                 subprocess.run(cmd, check=True)
                 print(f"Converted {input_file} to {output_file}")
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     BATCH_SIZE = 8
     # Training Sampling rate and the target sampling rate for resampling the downloaded dataset (Note: If you change this you might need to redownload the dataset !!)
     # Note: If you add new datasets, please make sure that the dataset sampling rate and this parameter are matching, otherwise resample your audios
-    SAMPLE_RATE = 24000
+    SAMPLE_RATE = 16000
     # Max audio length in seconds to be used in training (every audio bigger than it will be ignored)
     MAX_AUDIO_LEN_IN_SECONDS = float("inf")
     DATASET_PATH = "/content/drive/MyDrive/fine-tune_dataset"
@@ -162,15 +162,16 @@ if __name__ == '__main__':
         weighted_sampler_attrs={"speaker_name": 1.0},
         weighted_sampler_multipliers={},
         # It defines the Speaker Consistency Loss (SCL) α to 9 like the paper
-        speaker_encoder_loss_alpha=9.0
+        speaker_encoder_loss_alpha=9.0,
+        epochs=10,
     )
 
     # Load all the datasets samples and split traning and evaluation sets
     train_samples, eval_samples = load_tts_samples(
         config.datasets,
-        eval_split=False,
+        eval_split=True,
         eval_split_max_size=config.eval_split_max_size,
-        eval_split_size=config.eval_split_size,
+        eval_split_size=0.1,
     )
 
     # Init the model
@@ -185,4 +186,5 @@ if __name__ == '__main__':
         train_samples=train_samples,
         eval_samples=eval_samples,
     )
+    print(trainer.num_gpus)
     trainer.fit()

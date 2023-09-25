@@ -102,7 +102,7 @@ def wav_to_spec(y, n_fft, hop_length, win_length, center=False):
         - spec : :math:`[B,C,T]`
     """
     y = y.squeeze(1)
-
+    #print(f"[wav_to_spec]enter, y device {y.get_device()}")
     if torch.min(y) < -1.0:
         print("min value is ", torch.min(y))
     if torch.max(y) > 1.0:
@@ -111,15 +111,18 @@ def wav_to_spec(y, n_fft, hop_length, win_length, center=False):
     global hann_window
     dtype_device = str(y.dtype) + "_" + str(y.device)
     wnsize_dtype_device = str(win_length) + "_" + dtype_device
+    #print(f"[wav_to_spec] wnsize_dtype_device {wnsize_dtype_device}")
     if wnsize_dtype_device not in hann_window:
         hann_window[wnsize_dtype_device] = torch.hann_window(win_length).to(dtype=y.dtype, device=y.device)
-
+    #print(f"[wav_to_spec] hann_window {hann_window[wnsize_dtype_device]}")
     y = torch.nn.functional.pad(
         y.unsqueeze(1),
         (int((n_fft - hop_length) / 2), int((n_fft - hop_length) / 2)),
         mode="reflect",
     )
+    #print(f"[wav_to_spec] pad, y:{y.shape} y device {y.get_device()}")
     y = y.squeeze(1)
+    #print(f"[wav_to_spec] squeeze, y:{y.shape} y device {y.get_device()}")
 
     spec = torch.stft(
         y,
@@ -133,8 +136,10 @@ def wav_to_spec(y, n_fft, hop_length, win_length, center=False):
         onesided=True,
         return_complex=False,
     )
+    #print(f"[wav_to_spec] after stft {spec.shape}, device: {spec.get_device()}")
 
     spec = torch.sqrt(spec.pow(2).sum(-1) + 1e-6)
+    #print(f"[wav_to_spec] return {spec.shape}, device: {spec.get_device()}")
     return spec
 
 
@@ -333,7 +338,7 @@ class VitsDataset(TTSDataset):
         wav_rel_lens = wav_lens / wav_lens_max
 
         token_padded = torch.LongTensor(B, max_text_len)
-        wav_padded = torch.FloatTensor(B, 2, wav_lens_max)
+        wav_padded = torch.FloatTensor(B, 1, wav_lens_max)
         token_padded = token_padded.zero_() + self.pad_id
         wav_padded = wav_padded.zero_() + self.pad_id
         for i in range(len(ids_sorted_decreasing)):
@@ -1491,19 +1496,22 @@ class Vits(BaseTTS):
         batch["language_ids"] = language_ids
         batch["d_vectors"] = d_vectors
         batch["speaker_ids"] = speaker_ids
+        #print(f"[VITS format_batch] {batch.keys()}")
         return batch
 
     def format_batch_on_device(self, batch):
         """Compute spectrograms on the device."""
+        #print("[VITS Enter format batch on device]")
         ac = self.config.audio
-
+        #print(f"ac len {len(ac)}")
         if self.args.encoder_sample_rate:
             wav = self.audio_resampler(batch["waveform"])
         else:
             wav = batch["waveform"]
-
+        #print(f"wav size: {len(wav)}")
         # compute spectrograms
-        batch["spec"] = wav_to_spec(wav, ac.fft_size, ac.hop_length, ac.win_length, center=False)
+        batch['spec'] = wav_to_spec(wav, ac.fft_size, ac.hop_length, ac.win_length, center=False)
+        #print(f"batch[spec] shape {batch['spec'].shape}, device: {batch['spec'].get_device()}")
 
         if self.args.encoder_sample_rate:
             # recompute spec with high sampling rate to the loss
@@ -1535,7 +1543,7 @@ class Vits(BaseTTS):
         # compute spectrogram frame lengths
         batch["spec_lens"] = (batch["spec"].shape[2] * batch["waveform_rel_lens"]).int()
         batch["mel_lens"] = (batch["mel"].shape[2] * batch["waveform_rel_lens"]).int()
-
+        #print(f"batch[spec_lens] {batch['spec_lens']}, device: {batch['spec_lens'].get_device()}")
         if self.args.encoder_sample_rate:
             assert (batch["spec_lens"] - (batch["mel_lens"] / self.interpolate_factor).int()).sum() == 0
         else:
@@ -1544,6 +1552,7 @@ class Vits(BaseTTS):
         # zero the padding frames
         batch["spec"] = batch["spec"] * sequence_mask(batch["spec_lens"]).unsqueeze(1)
         batch["mel"] = batch["mel"] * sequence_mask(batch["mel_lens"]).unsqueeze(1)
+        print(f"[VITS format_batch_on_device] {batch.keys()}")
         return batch
 
     def get_sampler(self, config: Coqpit, dataset: TTSDataset, num_gpus=1, is_eval=False):
