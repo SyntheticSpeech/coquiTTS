@@ -17,3 +17,25 @@
 17||Solutions to the practice problems are at the end of each chapter. 
 18||As you read, try to solve each problem on your own and then check the solution to make sure you are on the right track. 
 19||Each chapter is followed by a set of homework problems of varying difficulty. Your instructor has the solutions to the homework problems in an instructor's manual. 
+20||Since the publication of the first edition 16 years ago, our book has been adopted for use at many hundreds of colleges and universities, translated into 14 languages, and used by over one hundred thousand students and practitioners worldwide. 
+21||We’ve heard from many of these readers and have been overwhelmed by the ­positive ­response.
+22||We think one important reason for this success has been that our book continues to offer a fresh and timely approach to computer networking instruction. 
+23||We’ve made changes in this seventh edition, but we’ve also kept unchanged what we believe to be the most important aspects of this book.
+24||its top-down approach, its focus on the Internet and a modern treatment of computer networking.
+25||Nevertheless, the seventh edition has been revised and updated substantially.
+26||Long-time readers of our book will notice that for the first time since this text was published, we’ve changed the organization of the chapters themselves. 
+27||The network layer, which had been previously covered in a single chapter, is now covered in Chapter 4 and Chapter 5.
+28||This expanded coverage of the network layer reflects the swift rise in importance of software-defined networking. 
+29||Although a relatively recent innovation, SDN has been rapidly adopted in practice—so much so that it’s already hard to imagine an introduction to modern computer networking that doesn’t cover SDN. 
+30||The topic of network management, previously covered in Chapter 9, has now been folded into the new Chapter 5. 
+31||As always, we’ve also updated many other sections of the text to reflect recent changes in the dynamic field of networking since the sixth edition. 
+32||As always, material that has been retired from the printed text can always be found on this book’s Companion Website. 
+33||This textbook is for a first course on computer networking. 
+34||It can be used in both computer science and electrical engineering departments. 
+35||In terms of programming languages, the book assumes only that the student has experience with programming. 
+36||Although this book is more precise and analytical than many other introductory computer networking texts, it rarely uses any mathematical concepts that are not taught in high school. 
+37||We have made a deliberate effort to avoid using any advanced calculus, probability, or stochastic process concepts.
+38||Although we’ve included some homework problems for students with this advanced background.
+39||The book is therefore appropriate for undergraduate courses and for first-year graduate courses. 
+40||It should also be useful to practitioners in the telecommunications industry.
+41||its attention to both principles and practice, and its accessible style and approach toward learning about computer networking.
